@@ -88,6 +88,9 @@
 
     /* scroll margin for anchored sections under sticky header */
     section { scroll-margin-top: 86px; }
+
+    /* Lightbox controls: ensure always visible */
+    #lightboxBack, #lightboxClose { touch-action: manipulation; }
   </style>
 </head>
 
@@ -629,17 +632,21 @@
   <div id="lightbox" class="fixed inset-0 z-[999] hidden" aria-hidden="true">
     <div id="lightboxBackdrop" class="absolute inset-0 bg-black/75"></div>
 
+    <!-- FIXED back arrow to make exit obvious -->
+    <button id="lightboxBack" type="button" class="fixed top-4 left-4 z-[1001] inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white px-4 h-11 shadow-xl" aria-label="Назад (закрыть)">
+      <span class="text-xl leading-none">←</span>
+      <span class="text-sm font-semibold hidden sm:inline">Назад</span>
+    </button>
+
+    <button id="lightboxClose" type="button" class="fixed top-4 right-4 z-[1001] inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white text-xl leading-none shadow-xl" aria-label="Закрыть">
+      ✕
+    </button>
+
     <div class="relative h-full w-full flex items-center justify-center p-4">
       <div id="lightboxContent" class="relative w-full max-w-5xl">
-        <button id="lightboxBack" type="button" class="absolute -top-3 -left-3 md:top-3 md:left-3 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white text-xl leading-none" aria-label="Назад (закрыть)">
-          ←
-        </button>
-        <button id="lightboxClose" type="button" class="absolute -top-3 -right-3 md:top-3 md:right-3 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white text-xl leading-none" aria-label="Закрыть">
-          ✕
-        </button>
-
         <div class="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md p-3 md:p-4 shadow-2xl">
-          <img id="lightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl" />
+          <img id="lightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl cursor-pointer" title="Нажмите на фото, чтобы выйти" />
+          <div class="mt-2 text-center text-xs text-white/60">Нажмите «← Назад», «✕» или на фото, чтобы закрыть</div>
         </div>
       </div>
     </div>
@@ -668,7 +675,7 @@
       setMenu(open);
     });
 
-    // Smooth anchor navigation (fix for HOME/STORY/ROSTER/MISSION/etc.)
+    // Smooth anchor navigation
     function headerOffset() {
       const header = document.querySelector('header');
       const rect = header?.getBoundingClientRect();
@@ -689,19 +696,16 @@
         if (prevTabIndex === null) el.setAttribute('tabindex', '-1');
         el.focus({ preventScroll: true });
         if (prevTabIndex === null) {
-          // cleanup after focus ring
           setTimeout(() => el.removeAttribute('tabindex'), 400);
         }
       }
     }
 
-    // Close mobile menu + handle anchor scrolling
     $$('a[href^="#"]').forEach(a => {
       a.addEventListener('click', (e) => {
         const href = a.getAttribute('href');
         if (!href || href === '#') return;
 
-        // If it's an in-page anchor
         if (href.startsWith('#')) {
           e.preventDefault();
           if (!mobileMenu.classList.contains('hidden')) setMenu(false);
@@ -711,13 +715,12 @@
       });
     });
 
-    // If page opened with #hash or hash changes
     window.addEventListener('load', () => {
       if (location.hash) scrollToHash(location.hash, { focus: false });
     });
     window.addEventListener('hashchange', () => scrollToHash(location.hash, { focus: false }));
 
-    // Close on Escape
+    // Close on Escape (menu)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') setMenu(false);
     });
@@ -772,7 +775,6 @@
       .filter(Boolean);
 
     const spy = new IntersectionObserver((entries) => {
-      // pick most visible
       const visible = entries
         .filter(e => e.isIntersecting)
         .sort((a,b) => (b.intersectionRatio - a.intersectionRatio));
@@ -818,8 +820,8 @@
         lightbox.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
 
-        // focus close for accessibility
-        closeBtn.focus({ preventScroll: true });
+        // focus back button so it's immediately discoverable
+        backBtn.focus({ preventScroll: true });
       }
 
       function close() {
@@ -828,7 +830,6 @@
         lightbox.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
 
-        // optional: release image URL
         imgEl.removeAttribute('src');
         imgEl.alt = '';
 
@@ -850,7 +851,6 @@
       document.addEventListener('keydown', (e) => {
         const t = e.target.closest?.('[data-lightbox]');
         if (!t || t.tagName !== 'IMG') {
-          // allow global escape close
           if (e.key === 'Escape') close();
           return;
         }
@@ -868,12 +868,15 @@
       // Close: click backdrop
       backdrop.addEventListener('click', close);
 
-      // Prevent closing when clicking on content
+      // Prevent backdrop close when clicking inside content
       content?.addEventListener('click', (e) => e.stopPropagation());
 
       // Close: buttons
       closeBtn.addEventListener('click', close);
       backBtn.addEventListener('click', close);
+
+      // Extra: close by clicking on the full image itself
+      imgEl.addEventListener('click', close);
     })();
   </script>
 </body>
