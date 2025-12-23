@@ -75,6 +75,9 @@
     /* prevent layout jump when menu opens */
     body.menu-open { overflow: hidden; }
 
+    /* prevent scroll when modal open */
+    body.modal-open { overflow: hidden; }
+
     /* gradient text helper */
     .grad-text {
       background: linear-gradient(90deg, var(--accent2), var(--accent));
@@ -377,7 +380,7 @@
             <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Account</span>
           </div>
           <div class="mt-4">
-            <img src="sib.png" alt="sibpollerty" loading="lazy" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5" />
+            <img src="sib.png" alt="sibpollerty" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
           </div>
         </article>
 
@@ -387,7 +390,7 @@
             <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Account</span>
           </div>
           <div class="mt-4">
-            <img src="fals.png" alt="Fals1on" loading="lazy" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5" />
+            <img src="fals.png" alt="Fals1on" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
           </div>
         </article>
 
@@ -397,7 +400,7 @@
             <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Account</span>
           </div>
           <div class="mt-4">
-            <img src="disc.png" alt="D1scut" loading="lazy" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5" />
+            <img src="disc.png" alt="D1scut" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
           </div>
         </article>
       </div>
@@ -622,6 +625,23 @@
     </footer>
   </main>
 
+  <!-- Lightbox modal (single instance, reused) -->
+  <div id="lightbox" class="fixed inset-0 z-[999] hidden" aria-hidden="true">
+    <div id="lightboxBackdrop" class="absolute inset-0 bg-black/75"></div>
+
+    <div class="relative h-full w-full flex items-center justify-center p-4">
+      <div id="lightboxContent" class="relative w-full max-w-5xl">
+        <button id="lightboxClose" type="button" class="absolute -top-3 -right-3 md:top-3 md:right-3 inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white text-xl leading-none" aria-label="Закрыть">
+          ✕
+        </button>
+
+        <div class="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md p-3 md:p-4 shadow-2xl">
+          <img id="lightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl" />
+        </div>
+      </div>
+    </div>
+  </div>
+
   <script>
     // Utilities
     const $ = (sel, root = document) => root.querySelector(sel);
@@ -766,6 +786,90 @@
     }, { rootMargin: '-40% 0px -55% 0px', threshold: [0.05, 0.15, 0.25] });
 
     sections.forEach(s => spy.observe(s));
+
+    // ===== Lightbox (ACCOUNTS images) =====
+    (function initLightbox() {
+      const lightbox = $('#lightbox');
+      const backdrop = $('#lightboxBackdrop');
+      const content = $('#lightboxContent');
+      const imgEl = $('#lightboxImg');
+      const closeBtn = $('#lightboxClose');
+
+      if (!lightbox || !backdrop || !imgEl || !closeBtn) return;
+
+      let lastFocus = null;
+
+      function isOpen() {
+        return !lightbox.classList.contains('hidden');
+      }
+
+      function openFromImage(previewImg) {
+        if (!previewImg) return;
+        lastFocus = document.activeElement;
+
+        imgEl.src = previewImg.currentSrc || previewImg.src;
+        imgEl.alt = previewImg.alt || '';
+
+        lightbox.classList.remove('hidden');
+        lightbox.setAttribute('aria-hidden', 'false');
+        document.body.classList.add('modal-open');
+
+        // focus close for accessibility
+        closeBtn.focus({ preventScroll: true });
+      }
+
+      function close() {
+        if (!isOpen()) return;
+        lightbox.classList.add('hidden');
+        lightbox.setAttribute('aria-hidden', 'true');
+        document.body.classList.remove('modal-open');
+
+        // optional: release image URL
+        imgEl.removeAttribute('src');
+        imgEl.alt = '';
+
+        if (lastFocus && typeof lastFocus.focus === 'function') {
+          lastFocus.focus({ preventScroll: true });
+        }
+        lastFocus = null;
+      }
+
+      // Click preview (event delegation)
+      document.addEventListener('click', (e) => {
+        const t = e.target.closest('[data-lightbox]');
+        if (!t) return;
+        if (t.tagName !== 'IMG') return;
+        openFromImage(t);
+      });
+
+      // Keyboard open on preview
+      document.addEventListener('keydown', (e) => {
+        const t = e.target.closest?.('[data-lightbox]');
+        if (!t || t.tagName !== 'IMG') {
+          // allow global escape close
+          if (e.key === 'Escape') close();
+          return;
+        }
+
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openFromImage(t);
+        }
+
+        if (e.key === 'Escape') {
+          close();
+        }
+      });
+
+      // Close: click backdrop
+      backdrop.addEventListener('click', close);
+
+      // Prevent closing when clicking on content
+      content?.addEventListener('click', (e) => e.stopPropagation());
+
+      // Close: button
+      closeBtn.addEventListener('click', close);
+    })();
   </script>
 </body>
 </html>
