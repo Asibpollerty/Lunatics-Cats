@@ -5,12 +5,17 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="color-scheme" content="dark" />
   <title>Lunatics Cats (LUCA) — Команда Brawl Stars</title>
-  <meta name="description" content="Lunatics Cats (LUCA) — команда, основанная на дисциплине, ответственности и системной подготовке. История, состав, миссия и подробная хроника." />
+  <meta name="description" content="Lunatics Cats (LUCA) — команда, основанная на дисциплине, ответственности и системной подготовке." />
 
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
+    * { font-family: 'Inter', system-ui, sans-serif; }
     html { scroll-behavior: smooth; }
+    
     :root {
       --bg0: #070A12;
       --bg1: #0B1020;
@@ -18,67 +23,176 @@
       --stroke: rgba(255,255,255,.10);
       --txt: rgba(255,255,255,.88);
       --muted: rgba(255,255,255,.65);
-      --accent: #A78BFA; /* violet */
-      --accent2: #22D3EE; /* cyan */
+      --accent: #A78BFA;
+      --accent2: #22D3EE;
+      --glow: rgba(167,139,250,.4);
     }
 
     body {
+      background: var(--bg0);
+      color: var(--txt);
+      overflow-x: hidden;
+    }
+
+    /* Animated gradient background */
+    .bg-animated {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
       background:
         radial-gradient(1200px 600px at 15% 10%, rgba(167,139,250,.18), transparent 60%),
         radial-gradient(900px 500px at 85% 15%, rgba(34,211,238,.16), transparent 55%),
         radial-gradient(900px 650px at 40% 90%, rgba(16,185,129,.10), transparent 55%),
         linear-gradient(180deg, var(--bg0), var(--bg1));
-      color: var(--txt);
+      animation: bgPulse 8s ease-in-out infinite alternate;
     }
 
-    /* subtle noise */
+    @keyframes bgPulse {
+      0% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Floating particles */
+    .particles {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 50%;
+      opacity: 0.4;
+      animation: float 15s infinite ease-in-out;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+    }
+
+    /* Noise overlay */
     .noise::before {
       content: "";
       position: fixed;
       inset: 0;
       pointer-events: none;
-      background-image:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
-      opacity: .14;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='.18'/%3E%3C/svg%3E");
+      opacity: .12;
       mix-blend-mode: overlay;
+      z-index: 1000;
     }
 
+    /* Scroll progress bar */
+    .scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      z-index: 9999;
+      transform-origin: left;
+      transform: scaleX(0);
+      box-shadow: 0 0 10px var(--accent2), 0 0 20px var(--accent);
+    }
+
+    /* Glass morphism */
     .glass {
       background: linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
       border: 1px solid var(--stroke);
       box-shadow: 0 10px 40px rgba(0,0,0,.35);
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
+    .glass:hover {
+      border-color: rgba(255,255,255,.18);
+      box-shadow: 0 20px 60px rgba(0,0,0,.4), 0 0 40px rgba(167,139,250,.1);
+    }
+
+    /* Card hover effects */
+    .card-3d {
+      transform-style: preserve-3d;
+      perspective: 1000px;
+      transition: transform 0.4s ease;
+    }
+
+    .card-3d:hover {
+      transform: translateY(-8px) rotateX(2deg);
+    }
+
+    /* Shine effect */
     .shine {
       position: relative;
       overflow: hidden;
     }
+    
     .shine::after {
       content: "";
       position: absolute;
-      inset: -30% -60%;
-      background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,.10), transparent 60%);
-      transform: translateX(-35%) rotate(10deg);
-      opacity: 0;
-      transition: opacity .25s ease;
+      inset: -100%;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.12) 50%, transparent 70%);
+      transform: translateX(-100%) rotate(25deg);
+      transition: transform 0.6s ease;
       pointer-events: none;
     }
-    .shine:hover::after { opacity: 1; }
+    
+    .shine:hover::after {
+      transform: translateX(100%) rotate(25deg);
+    }
 
-    .reveal { opacity: 0; transform: translateY(14px); }
-    .reveal.is-in { opacity: 1; transform: translateY(0); transition: opacity .7s ease, transform .7s ease; }
+    /* Glow button */
+    .glow-btn {
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
 
-    /* focus */
-    :focus-visible { outline: 2px solid rgba(34,211,238,.8); outline-offset: 3px; }
+    .glow-btn::before {
+      content: "";
+      position: absolute;
+      inset: -2px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent2));
+      border-radius: inherit;
+      z-index: -1;
+      opacity: 0;
+      filter: blur(8px);
+      transition: opacity 0.3s ease;
+    }
 
-    /* prevent layout jump when menu opens */
-    body.menu-open { overflow: hidden; }
+    .glow-btn:hover::before {
+      opacity: 0.6;
+    }
 
-    /* prevent scroll when modal open */
-    body.modal-open { overflow: hidden; }
+    .glow-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(167,139,250,.3);
+    }
 
-    /* gradient text helper */
+    /* Reveal animations */
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+
+    .reveal.is-in {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .reveal-delay-1 { transition-delay: 0.1s !important; }
+    .reveal-delay-2 { transition-delay: 0.2s !important; }
+    .reveal-delay-3 { transition-delay: 0.3s !important; }
+
+    /* Gradient text */
     .grad-text {
       background: linear-gradient(90deg, var(--accent2), var(--accent));
       -webkit-background-clip: text;
@@ -86,41 +200,240 @@
       color: transparent;
     }
 
-    /* scroll margin for anchored sections under sticky header */
+    .grad-text-animated {
+      background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent2));
+      background-size: 200% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: gradientShift 3s ease infinite;
+    }
+
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    /* Typing effect */
+    .typing {
+      border-right: 2px solid var(--accent);
+      animation: blink 0.8s infinite;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+
+    @keyframes blink {
+      0%, 50% { border-color: var(--accent); }
+      51%, 100% { border-color: transparent; }
+    }
+
+    /* Stat counter animation */
+    .stat-number {
+      display: inline-block;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Pulse animation for status */
+    .pulse-dot {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.2); }
+    }
+
+    /* Icon hover rotation */
+    .icon-spin:hover svg {
+      animation: spin 0.5s ease;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Section styling */
     section { scroll-margin-top: 86px; }
 
-    /* Lightbox controls: ensure always visible */
-    #lightboxBack, #lightboxClose { touch-action: manipulation; }
+    /* Focus states */
+    :focus-visible {
+      outline: 2px solid rgba(34,211,238,.8);
+      outline-offset: 3px;
+    }
+
+    /* Body states */
+    body.menu-open, body.modal-open { overflow: hidden; }
+
+    /* Loading screen */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 10000;
+      background: var(--bg0);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(255,255,255,0.1);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: loader 1s linear infinite;
+    }
+
+    @keyframes loader {
+      to { transform: rotate(360deg); }
+    }
+
+    /* Timeline connector */
+    .timeline-item {
+      position: relative;
+    }
+
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -20px;
+      top: 50%;
+      width: 8px;
+      height: 8px;
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border-radius: 50%;
+      transform: translateY(-50%);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    /* Achievement badge */
+    .achievement {
+      position: relative;
+    }
+
+    .achievement::after {
+      content: "🏆";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      font-size: 1.25rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+      animation: float-badge 2s ease-in-out infinite;
+    }
+
+    @keyframes float-badge {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-4px); }
+    }
+
+    /* Hover lift effect */
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+
+    /* Image hover zoom */
+    .img-zoom {
+      overflow: hidden;
+    }
+
+    .img-zoom img {
+      transition: transform 0.5s ease;
+    }
+
+    .img-zoom:hover img {
+      transform: scale(1.05);
+    }
+
+    /* Nav active indicator */
+    .nav-active {
+      position: relative;
+    }
+
+    .nav-active::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent2), var(--accent));
+      border-radius: 2px;
+    }
+
+    /* Marquee */
+    .marquee {
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 20s linear infinite;
+    }
+
+    @keyframes marquee {
+      from { transform: translateX(0); }
+      to { transform: translateX(-50%); }
+    }
   </style>
 </head>
 
 <body class="noise min-h-screen">
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loader"></div>
+    <div class="text-sm text-white/60">Загрузка LUCA...</div>
+  </div>
+
+  <!-- Animated Background -->
+  <div class="bg-animated"></div>
+
+  <!-- Floating Particles -->
+  <div class="particles" id="particles"></div>
+
+  <!-- Scroll Progress -->
+  <div class="scroll-progress" id="scrollProgress"></div>
+
   <!-- Top bar -->
   <header class="sticky top-0 z-50">
     <div class="mx-auto max-w-6xl px-4">
       <div class="mt-3 mb-3 rounded-2xl glass">
         <div class="flex items-center justify-between px-4 py-3 md:px-5">
           <a href="#home" class="flex items-center gap-3 group" aria-label="На главную">
-            <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <!-- simple cat-like mark -->
-              <img src="logo.png" class="h-9 w-9 rounded-xl object-cover" alt="LUCA">
+            <span class="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 group-hover:border-white/20 group-hover:bg-white/10 transition-all duration-300 overflow-hidden">
+              <img src="logo.png" class="h-10 w-10 rounded-xl object-cover transition-transform duration-300 group-hover:scale-110" alt="LUCA">
             </span>
             <div class="leading-tight">
-              <div class="text-sm font-semibold tracking-wide">Lunatics Cats</div>
+              <div class="text-sm font-bold tracking-wide group-hover:text-white transition-colors">Lunatics Cats</div>
               <div class="text-xs text-white/60">LUCA • Brawl Stars</div>
             </div>
           </a>
 
           <nav class="hidden md:flex items-center gap-1" aria-label="Навигация">
-            <a data-nav href="#home" class="px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5">HOME</a>
-            <a data-nav href="#story" class="px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5">STORY</a>
-            <a data-nav href="#roster" class="px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5">ROSTER</a>
-            <a data-nav href="#accounts" class="px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5">ACCOUNTS</a>
-            <a data-nav href="#mission" class="px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5">MISSION</a>
-            <a data-nav href="#history" class="px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5">DETAILED HISTORY</a>
-            <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="ml-1 inline-flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold border border-white/10 bg-white/5 hover:bg-white/10">
-              <span class="grad-text">Telegram</span>
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <a data-nav href="#home" class="nav-link px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300">HOME</a>
+            <a data-nav href="#story" class="nav-link px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300">STORY</a>
+            <a data-nav href="#roster" class="nav-link px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300">ROSTER</a>
+            <a data-nav href="#accounts" class="nav-link px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300">ACCOUNTS</a>
+            <a data-nav href="#mission" class="nav-link px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300">MISSION</a>
+            <a data-nav href="#history" class="nav-link px-3 py-2 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-all duration-300">HISTORY</a>
+            <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="ml-2 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold border border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 glow-btn">
+              <span class="grad-text-animated">Telegram</span>
+              <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none">
                 <path d="M14 5h5v5" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
                 <path d="M10 14L19 5" stroke="rgba(255,255,255,.85)" stroke-width="1.6" stroke-linecap="round"/>
                 <path d="M19 14v5h-5" stroke="rgba(255,255,255,.55)" stroke-width="1.6" stroke-linecap="round"/>
@@ -129,8 +442,8 @@
             </a>
           </nav>
 
-          <button id="menuBtn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10" aria-label="Открыть меню" aria-expanded="false">
-            <svg id="menuIcon" class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <button id="menuBtn" class="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all duration-300" aria-label="Открыть меню" aria-expanded="false">
+            <svg id="menuIcon" class="h-5 w-5 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
               <path d="M5 7h14M5 12h14M5 17h14" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round"/>
             </svg>
           </button>
@@ -139,13 +452,13 @@
         <!-- Mobile menu -->
         <div id="mobileMenu" class="md:hidden hidden border-t border-white/10 px-3 py-3">
           <div class="grid gap-1">
-            <a data-nav href="#home" class="px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/5">HOME</a>
-            <a data-nav href="#story" class="px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/5">STORY</a>
-            <a data-nav href="#roster" class="px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/5">ROSTER</a>
-            <a data-nav href="#accounts" class="px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/5">ACCOUNTS</a>
-            <a data-nav href="#mission" class="px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/5">MISSION</a>
-            <a data-nav href="#history" class="px-3 py-2 rounded-lg text-sm text-white/80 hover:bg-white/5">DETAILED HISTORY</a>
-            <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="mt-1 inline-flex items-center justify-between gap-2 rounded-xl px-3 py-2 text-sm font-semibold border border-white/10 bg-white/5 hover:bg-white/10">
+            <a data-nav href="#home" class="px-3 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/5 transition-all">HOME</a>
+            <a data-nav href="#story" class="px-3 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/5 transition-all">STORY</a>
+            <a data-nav href="#roster" class="px-3 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/5 transition-all">ROSTER</a>
+            <a data-nav href="#accounts" class="px-3 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/5 transition-all">ACCOUNTS</a>
+            <a data-nav href="#mission" class="px-3 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/5 transition-all">MISSION</a>
+            <a data-nav href="#history" class="px-3 py-2.5 rounded-lg text-sm text-white/80 hover:bg-white/5 transition-all">DETAILED HISTORY</a>
+            <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="mt-2 inline-flex items-center justify-between gap-2 rounded-xl px-4 py-3 text-sm font-semibold border border-white/10 bg-white/5 hover:bg-white/10 transition-all">
               <span>Telegram</span>
               <span class="grad-text">t.me/bldsib</span>
             </a>
@@ -160,34 +473,37 @@
     <section id="home" class="pt-6 md:pt-10">
       <div class="grid gap-6 md:grid-cols-12">
         <div class="md:col-span-7">
-          <div class="reveal rounded-3xl glass p-6 md:p-8 shine">
-            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/70">
-              <span class="inline-block h-1.5 w-1.5 rounded-full" style="background: linear-gradient(90deg, var(--accent2), var(--accent));"></span>
+          <div class="reveal rounded-3xl glass p-6 md:p-8 shine card-3d">
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/70">
+              <span class="inline-block h-2 w-2 rounded-full pulse-dot" style="background: linear-gradient(90deg, var(--accent2), var(--accent));"></span>
               <span>Команда • Brawl Stars • LUCA</span>
             </div>
-            <h1 class="mt-4 text-3xl md:text-5xl font-extrabold tracking-tight">
+            <h1 class="mt-5 text-4xl md:text-6xl font-black tracking-tight">
               <span class="block text-white/85">HOME</span>
-              <span class="block grad-text">LUNATICS CATS</span>
+              <span class="block grad-text-animated" id="heroTitle">LUNATICS CATS</span>
             </h1>
-            <p class="mt-4 text-lg md:text-xl text-white/75 leading-relaxed">
+            <p class="mt-4 text-lg md:text-xl text-white/75 leading-relaxed italic">
               «Рожденные падать, чтобы взлететь выше.»
             </p>
             <p class="mt-5 text-sm md:text-base text-white/70 leading-relaxed">
-              <span class="font-semibold text-white/85">Lunatics Cats (LUCA)</span> — команда, основанная на дисциплине, ответственности и системной подготовке. Мы прошли через смену направлений, пересборку состава и возвращение после неудач, сохранив главное — рабочий подход и требовательность к результату. Сегодня LUCA — стабильный состав из трёх игроков, который последовательно повышает уровень игры и нацелен на решающие стадии турниров.
+              <span class="font-semibold text-white/90">Lunatics Cats (LUCA)</span> — команда, основанная на дисциплине, ответственности и системной подготовке. Мы прошли через смену направлений, пересборку состава и возвращение после неудач, сохранив главное — рабочий подход и требовательность к результату.
             </p>
 
-            <div class="mt-6 flex flex-wrap gap-3">
-              <a href="#roster" class="inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold bg-white text-black hover:bg-white/90">
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a href="#roster" class="glow-btn inline-flex items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-bold bg-white text-black hover:bg-white/95">
                 Смотреть состав
-                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                  <path d="M5 12h14" stroke="black" stroke-width="1.8" stroke-linecap="round"/>
-                  <path d="M13 6l6 6-6 6" stroke="black" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <svg class="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" viewBox="0 0 24 24" fill="none">
+                  <path d="M5 12h14" stroke="black" stroke-width="2" stroke-linecap="round"/>
+                  <path d="M13 6l6 6-6 6" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
               </a>
-              <a href="#story" class="inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold border border-white/15 bg-white/5 hover:bg-white/10">
+              <a href="#story" class="inline-flex items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-semibold border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/25 transition-all duration-300">
                 История и этапы
               </a>
-              <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-2xl px-4 py-3 text-sm font-semibold border border-white/15 bg-white/5 hover:bg-white/10">
+              <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="inline-flex items-center gap-2 rounded-2xl px-5 py-3.5 text-sm font-semibold border border-white/15 bg-white/5 hover:bg-white/10 hover:border-white/25 transition-all duration-300 icon-spin">
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
+                </svg>
                 Telegram
               </a>
             </div>
@@ -195,115 +511,153 @@
         </div>
 
         <div class="md:col-span-5">
-          <div class="reveal rounded-3xl glass p-6 md:p-8">
-            <h2 class="text-sm font-semibold tracking-wide text-white/80">Ключевые факты</h2>
-            <div class="mt-4 grid gap-3">
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+          <div class="reveal reveal-delay-1 rounded-3xl glass p-6 md:p-8 hover-lift">
+            <h2 class="text-sm font-bold tracking-wide text-white/80 flex items-center gap-2">
+              <span class="inline-block h-1.5 w-6 rounded-full" style="background: linear-gradient(90deg, var(--accent2), var(--accent));"></span>
+              Ключевые факты
+            </h2>
+            <div class="mt-5 grid gap-3">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/8 transition-all duration-300">
                 <div class="text-xs text-white/60">Основаны</div>
-                <div class="mt-1 text-lg font-bold">06.06.2023</div>
+                <div class="mt-1 text-xl font-black stat-number" data-target="2023">06.06.2023</div>
               </div>
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/8 transition-all duration-300">
                 <div class="text-xs text-white/60">Текущий состав</div>
-                <div class="mt-1 text-lg font-bold">3 игрока</div>
+                <div class="mt-1 text-xl font-black"><span class="stat-number" data-target="3">0</span> игрока</div>
               </div>
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/8 transition-all duration-300">
                 <div class="text-xs text-white/60">Дисциплина</div>
-                <div class="mt-1 text-lg font-bold">Базовый принцип</div>
+                <div class="mt-1 text-xl font-black grad-text">Базовый принцип</div>
               </div>
-              <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+              <div class="rounded-2xl border border-white/10 bg-white/5 p-4 hover:bg-white/8 transition-all duration-300">
                 <div class="text-xs text-white/60">Фокус</div>
-                <div class="mt-1 text-lg font-bold">Brawl Stars</div>
+                <div class="mt-1 text-xl font-black flex items-center gap-2">
+                  Brawl Stars
+                  <span class="text-2xl">⭐</span>
+                </div>
               </div>
             </div>
 
-            <div class="mt-6 rounded-2xl border border-white/10 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 p-4">
+            <div class="mt-5 rounded-2xl border border-white/10 bg-gradient-to-r from-cyan-500/15 to-violet-500/15 p-4 achievement">
               <div class="text-xs text-white/60">Статус</div>
-              <div class="mt-1 text-sm text-white/80 leading-relaxed">
+              <div class="mt-2 text-sm text-white/85 leading-relaxed font-medium">
                 Стабильное ядро состава и планомерный рост. Цель — решающие стадии турниров.
               </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Stats Bar -->
+      <div class="reveal reveal-delay-2 mt-6 rounded-2xl glass p-4 md:p-5">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+          <div class="p-3">
+            <div class="text-3xl md:text-4xl font-black grad-text"><span class="counter" data-target="2">0</span></div>
+            <div class="mt-1 text-xs text-white/60">Года истории</div>
+          </div>
+          <div class="p-3">
+            <div class="text-3xl md:text-4xl font-black grad-text"><span class="counter" data-target="3">0</span></div>
+            <div class="mt-1 text-xs text-white/60">Core игрока</div>
+          </div>
+          <div class="p-3">
+            <div class="text-3xl md:text-4xl font-black grad-text"><span class="counter" data-target="1">0</span></div>
+            <div class="mt-1 text-xs text-white/60">Победа до титула</div>
+          </div>
+          <div class="p-3">
+            <div class="text-3xl md:text-4xl font-black grad-text">∞</div>
+            <div class="mt-1 text-xs text-white/60">Стремление к победе</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- STORY -->
-    <section id="story" class="pt-12 md:pt-16">
+    <section id="story" class="pt-14 md:pt-20">
       <div class="reveal flex items-end justify-between gap-4">
         <div>
-          <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">STORY</h2>
-          <p class="mt-2 text-white/70 max-w-2xl">Ключевые этапы развития: от основания до ребрендинга и текущего стабильного состава.</p>
+          <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 mb-3">
+            <span>📜</span> Хронология
+          </div>
+          <h2 class="text-3xl md:text-4xl font-black tracking-tight">STORY</h2>
+          <p class="mt-3 text-white/70 max-w-2xl">Ключевые этапы развития: от основания до ребрендинга и текущего стабильного состава.</p>
         </div>
-        <div class="hidden md:block text-xs text-white/50">Сжатая хронология</div>
+        <div class="hidden md:block text-xs text-white/50 border border-white/10 rounded-full px-3 py-1">Сжатая хронология</div>
       </div>
 
-      <div class="mt-6 grid gap-4 md:grid-cols-2">
-        <!-- timeline cards -->
-        <article class="reveal rounded-3xl glass p-6">
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <article class="reveal rounded-3xl glass p-6 shine hover-lift timeline-item">
           <div class="flex items-center justify-between">
-            <h3 class="font-bold">06.06.2023 — Основание (Blesseds)</h3>
-            <span class="text-xs text-white/60">I</span>
+            <h3 class="font-bold text-lg">06.06.2023 — Основание</h3>
+            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/10 bg-white/5 text-xs font-bold">I</span>
           </div>
-          <p class="mt-3 text-sm text-white/70 leading-relaxed">
-            Команду создали <span class="font-semibold text-white/85">sibpollerty</span> и <span class="font-semibold text-white/85">Fals1on</span>. Первым фундаментом стал спорт вне киберсцены — <span class="font-semibold text-white/85">бадминтон</span>. Он сформировал режим, выдержку и привычку работать на результат.
+          <p class="mt-4 text-sm text-white/70 leading-relaxed">
+            Команду создали <span class="font-semibold text-white/90">sibpollerty</span> и <span class="font-semibold text-white/90">Fals1on</span> под названием <span class="font-semibold text-white/90">Blesseds</span>. Первым фундаментом стал спорт — <span class="font-semibold text-white/90">бадминтон</span>. Он сформировал режим, выдержку и привычку работать на результат.
           </p>
         </article>
 
-        <article class="reveal rounded-3xl glass p-6">
+        <article class="reveal reveal-delay-1 rounded-3xl glass p-6 shine hover-lift timeline-item">
           <div class="flex items-center justify-between">
-            <h3 class="font-bold">Standoff 2 — опыт и переоценка</h3>
-            <span class="text-xs text-white/60">II</span>
+            <h3 class="font-bold text-lg">Standoff 2 — опыт</h3>
+            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/10 bg-white/5 text-xs font-bold">II</span>
           </div>
-          <p class="mt-3 text-sm text-white/70 leading-relaxed">
-            Позже команда перешла в <span class="font-semibold text-white/85">Standoff 2</span> и подписала <span class="font-semibold text-white/85">D1scut</span>. Существенных результатов добиться не удалось. В ноябре состав был распущен, чтобы пересобрать структуру и подход.
+          <p class="mt-4 text-sm text-white/70 leading-relaxed">
+            Команда перешла в <span class="font-semibold text-white/90">Standoff 2</span> и подписала <span class="font-semibold text-white/90">D1scut</span>. Существенных результатов добиться не удалось. В ноябре состав был распущен для пересборки.
           </p>
         </article>
 
-        <article class="reveal rounded-3xl glass p-6">
+        <article class="reveal rounded-3xl glass p-6 shine hover-lift timeline-item">
           <div class="flex items-center justify-between">
-            <h3 class="font-bold">04.12.2023 — Возобновление в Brawl Stars</h3>
-            <span class="text-xs text-white/60">III</span>
+            <h3 class="font-bold text-lg">04.12.2023 — Brawl Stars</h3>
+            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/10 bg-white/5 text-xs font-bold">III</span>
           </div>
-          <p class="mt-3 text-sm text-white/70 leading-relaxed">
-            4 декабря команда вернулась в соревнования уже в <span class="font-semibold text-white/85">Brawl Stars</span>. После периода уверенных выступлений состав был усилен игроками <span class="font-semibold text-white/85">Mr.Kraken</span>, <span class="font-semibold text-white/85">nikells</span>, <span class="font-semibold text-white/85">express</span>.
+          <p class="mt-4 text-sm text-white/70 leading-relaxed">
+            4 декабря команда вернулась в соревнования в <span class="font-semibold text-white/90">Brawl Stars</span>. Состав усилен: <span class="font-semibold text-white/90">Mr.Kraken</span>, <span class="font-semibold text-white/90">nikells</span>, <span class="font-semibold text-white/90">express</span>.
           </p>
         </article>
 
-        <article class="reveal rounded-3xl glass p-6">
+        <article class="reveal reveal-delay-1 rounded-3xl glass p-6 shine hover-lift timeline-item">
           <div class="flex items-center justify-between">
-            <h3 class="font-bold">Ключевой матч</h3>
-            <span class="text-xs text-white/60">IV</span>
+            <h3 class="font-bold text-lg">Ключевой матч</h3>
+            <span class="inline-flex items-center justify-center h-8 w-8 rounded-full border border-white/10 bg-white/5 text-xs font-bold">IV</span>
           </div>
-          <p class="mt-3 text-sm text-white/70 leading-relaxed">
-            Игра против <span class="font-semibold text-white/85">Dexoxyribonucleic acid</span>.
-            <span class="block mt-2 text-white/60">Состав: Express / Fals1on / Mr.Kraken.</span>
+          <p class="mt-4 text-sm text-white/70 leading-relaxed">
+            Игра против <span class="font-semibold text-white/90">Dexoxyribonucleic acid</span>.
           </p>
+          <div class="mt-3 inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs text-white/60">
+            <span>🎮</span> Express / Fals1on / Mr.Kraken
+          </div>
         </article>
 
-        <article class="reveal rounded-3xl glass p-6 md:col-span-2">
-          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-            <h3 class="font-bold">Кадровые решения • Одна победа до титула • Ребрендинг</h3>
-            <span class="text-xs text-white/60">V–VI</span>
+        <article class="reveal rounded-3xl glass p-6 md:col-span-2 hover-lift">
+          <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+            <h3 class="font-bold text-lg">Кадровые решения • Титул • Ребрендинг</h3>
+            <span class="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/5 px-3 py-1 text-xs">V–VI</span>
           </div>
-          <div class="mt-3 grid gap-3 md:grid-cols-3">
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div class="text-xs text-white/60">Изменения состава</div>
-              <ul class="mt-2 space-y-1 text-sm text-white/70">
-                <li>Mr.Kraken — ушёл по личному желанию.</li>
-                <li>express — расторжение по инициативе клуба (результаты).</li>
-                <li>nikells — расторжение из за разногласий.</li>
+          <div class="mt-5 grid gap-4 md:grid-cols-3">
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-5 hover:bg-white/8 transition-all">
+              <div class="flex items-center gap-2 text-xs text-white/60">
+                <span>👥</span> Изменения состава
+              </div>
+              <ul class="mt-3 space-y-2 text-sm text-white/70">
+                <li class="flex items-start gap-2"><span class="text-red-400">×</span> Mr.Kraken — личное желание</li>
+                <li class="flex items-start gap-2"><span class="text-red-400">×</span> express — результаты</li>
+                <li class="flex items-start gap-2"><span class="text-red-400">×</span> nikells — разногласия</li>
               </ul>
             </div>
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div class="text-xs text-white/60">Одна победа до титула</div>
-              <p class="mt-2 text-sm text-white/70 leading-relaxed">
-                Состав <span class="font-semibold text-white/85">sibpollerty / Fals1on / D1scut</span> был в шаге от победы на Чемпионате Мира. Не хватило одной победы.
+            <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-yellow-500/10 to-orange-500/10 p-5 achievement">
+              <div class="flex items-center gap-2 text-xs text-white/60">
+                <span>🏆</span> Одна победа до титула
+              </div>
+              <p class="mt-3 text-sm text-white/80 leading-relaxed">
+                Состав <span class="font-semibold text-white/90">sibpollerty / Fals1on / D1scut</span> был в шаге от победы на Чемпионате Мира.
               </p>
             </div>
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div class="text-xs text-white/60">02.03.2025 — Ребрендинг</div>
-              <p class="mt-2 text-sm text-white/70 leading-relaxed">
-                Название сменилось на <span class="font-semibold text-white/85">Lunatics Cats (LUCA)</span>. Текущий состав стабилен: <span class="font-semibold text-white/85">sibpollerty, Fals1on, D1scut</span>.
+            <div class="rounded-2xl border border-white/10 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 p-5">
+              <div class="flex items-center gap-2 text-xs text-white/60">
+                <span>✨</span> 02.03.2025 — Ребрендинг
+              </div>
+              <p class="mt-3 text-sm text-white/80 leading-relaxed">
+                Название сменилось на <span class="font-bold grad-text">Lunatics Cats (LUCA)</span>.
               </p>
             </div>
           </div>
@@ -312,154 +666,171 @@
     </section>
 
     <!-- ROSTER -->
-    <section id="roster" class="pt-12 md:pt-16">
+    <section id="roster" class="pt-14 md:pt-20">
       <div class="reveal">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">ROSTER</h2>
-        <p class="mt-2 text-white/70 max-w-2xl">Текущее ядро команды LUCA. Роли описаны как вклад в подготовку и результат.</p>
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 mb-3">
+          <span>👥</span> Состав
+        </div>
+        <h2 class="text-3xl md:text-4xl font-black tracking-tight">ROSTER</h2>
+        <p class="mt-3 text-white/70 max-w-2xl">Текущее ядро команды LUCA. Роли описаны как вклад в подготовку и результат.</p>
       </div>
 
-      <div class="mt-6 grid gap-4 md:grid-cols-3">
-        <article class="reveal rounded-3xl glass p-6 shine">
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <article class="reveal rounded-3xl glass p-6 shine hover-lift card-3d">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <h3 class="text-lg font-extrabold">sibpollerty</h3>
-              <p class="text-sm text-white/60">Captain / Founder</p>
+              <div class="inline-flex items-center gap-2">
+                <span class="text-2xl">👑</span>
+                <h3 class="text-xl font-black">sibpollerty</h3>
+              </div>
+              <p class="text-sm text-white/60 mt-1">Captain / Founder</p>
             </div>
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Core</span>
+            <span class="inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-400 font-semibold">Core</span>
           </div>
-          <p class="mt-4 text-sm text-white/75 leading-relaxed">«Ответственность за решения и стабильность команды.»</p>
-          <div class="mt-5 flex flex-wrap gap-2 text-xs">
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">дисциплина</span>
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">лидерство</span>
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">стабильность</span>
+          <p class="mt-5 text-sm text-white/75 leading-relaxed italic border-l-2 border-white/20 pl-4">«Ответственность за решения и стабильность команды.»</p>
+          <div class="mt-6 flex flex-wrap gap-2 text-xs">
+            <span class="rounded-full border border-violet-400/30 bg-violet-400/10 px-3 py-1.5 text-violet-300">дисциплина</span>
+            <span class="rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1.5 text-cyan-300">лидерство</span>
+            <span class="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-3 py-1.5 text-emerald-300">стабильность</span>
           </div>
         </article>
 
-        <article class="reveal rounded-3xl glass p-6 shine">
+        <article class="reveal reveal-delay-1 rounded-3xl glass p-6 shine hover-lift card-3d">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <h3 class="text-lg font-extrabold">Fals1on</h3>
-              <p class="text-sm text-white/60">Founder / Player</p>
+              <div class="inline-flex items-center gap-2">
+                <span class="text-2xl">🎯</span>
+                <h3 class="text-xl font-black">Fals1on</h3>
+              </div>
+              <p class="text-sm text-white/60 mt-1">Founder / Player</p>
             </div>
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Core</span>
+            <span class="inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-400 font-semibold">Core</span>
           </div>
-          <p class="mt-4 text-sm text-white/75 leading-relaxed">«Стратегия, подготовка и контроль темпа игры.»</p>
-          <div class="mt-5 flex flex-wrap gap-2 text-xs">
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">стратегия</span>
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">анализ</span>
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">контроль</span>
+          <p class="mt-5 text-sm text-white/75 leading-relaxed italic border-l-2 border-white/20 pl-4">«Стратегия, подготовка и контроль темпа игры.»</p>
+          <div class="mt-6 flex flex-wrap gap-2 text-xs">
+            <span class="rounded-full border border-orange-400/30 bg-orange-400/10 px-3 py-1.5 text-orange-300">стратегия</span>
+            <span class="rounded-full border border-blue-400/30 bg-blue-400/10 px-3 py-1.5 text-blue-300">анализ</span>
+            <span class="rounded-full border border-pink-400/30 bg-pink-400/10 px-3 py-1.5 text-pink-300">контроль</span>
           </div>
         </article>
 
-        <article class="reveal rounded-3xl glass p-6 shine">
+        <article class="reveal reveal-delay-2 rounded-3xl glass p-6 shine hover-lift card-3d">
           <div class="flex items-start justify-between gap-3">
             <div>
-              <h3 class="text-lg font-extrabold">D1scut</h3>
-              <p class="text-sm text-white/60">Core Player</p>
+              <div class="inline-flex items-center gap-2">
+                <span class="text-2xl">⚡</span>
+                <h3 class="text-xl font-black">D1scut</h3>
+              </div>
+              <p class="text-sm text-white/60 mt-1">Core Player</p>
             </div>
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Core</span>
+            <span class="inline-flex items-center rounded-full border border-cyan-400/30 bg-cyan-400/10 px-3 py-1 text-xs text-cyan-400 font-semibold">Core</span>
           </div>
-          <p class="mt-4 text-sm text-white/75 leading-relaxed">«Опыт, надёжность и уверенная игра в ключевых моментах.»</p>
-          <div class="mt-5 flex flex-wrap gap-2 text-xs">
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">опыт</span>
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">надёжность</span>
-            <span class="rounded-full border border-white/10 bg-white/5 px-2 py-1 text-white/70">клатч</span>
+          <p class="mt-5 text-sm text-white/75 leading-relaxed italic border-l-2 border-white/20 pl-4">«Опыт, надёжность и уверенная игра в ключевых моментах.»</p>
+          <div class="mt-6 flex flex-wrap gap-2 text-xs">
+            <span class="rounded-full border border-amber-400/30 bg-amber-400/10 px-3 py-1.5 text-amber-300">опыт</span>
+            <span class="rounded-full border border-green-400/30 bg-green-400/10 px-3 py-1.5 text-green-300">надёжность</span>
+            <span class="rounded-full border border-red-400/30 bg-red-400/10 px-3 py-1.5 text-red-300">клатч</span>
           </div>
         </article>
       </div>
     </section>
 
     <!-- ACCOUNTS -->
-    <section id="accounts" class="pt-12 md:pt-16">
+    <section id="accounts" class="pt-14 md:pt-20">
       <div class="reveal">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">ACCOUNTS</h2>
-        <p class="mt-2 text-white/70 max-w-2xl">Карточки игроков с изображениями аккаунтов/профилей.</p>
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 mb-3">
+          <span>📱</span> Аккаунты
+        </div>
+        <h2 class="text-3xl md:text-4xl font-black tracking-tight">ACCOUNTS</h2>
+        <p class="mt-3 text-white/70 max-w-2xl">Карточки игроков с изображениями аккаунтов. Нажмите для увеличения.</p>
       </div>
 
-      <div class="mt-6 grid gap-4 md:grid-cols-3">
-        <article class="reveal rounded-3xl glass p-6 shine">
-          <div class="flex items-center justify-between gap-3">
-            <h3 class="text-lg font-extrabold">sibpollerty</h3>
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Account</span>
+      <div class="mt-8 grid gap-5 md:grid-cols-3">
+        <article class="reveal rounded-3xl glass p-5 shine hover-lift img-zoom">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h3 class="text-lg font-bold flex items-center gap-2">
+              <span>👑</span> sibpollerty
+            </h3>
+            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/60">Account</span>
           </div>
-          <div class="mt-4">
-            <img src="sib.png" alt="sibpollerty" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
-          </div>
+          <img src="sib.png" alt="sibpollerty" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
         </article>
 
-        <article class="reveal rounded-3xl glass p-6 shine">
-          <div class="flex items-center justify-between gap-3">
-            <h3 class="text-lg font-extrabold">Fals1on</h3>
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Account</span>
+        <article class="reveal reveal-delay-1 rounded-3xl glass p-5 shine hover-lift img-zoom">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h3 class="text-lg font-bold flex items-center gap-2">
+              <span>🎯</span> Fals1on
+            </h3>
+            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/60">Account</span>
           </div>
-          <div class="mt-4">
-            <img src="fals.png" alt="Fals1on" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
-          </div>
+          <img src="fals.png" alt="Fals1on" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
         </article>
 
-        <article class="reveal rounded-3xl glass p-6 shine">
-          <div class="flex items-center justify-between gap-3">
-            <h3 class="text-lg font-extrabold">D1scut</h3>
-            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2 py-1 text-xs text-white/70">Account</span>
+        <article class="reveal reveal-delay-2 rounded-3xl glass p-5 shine hover-lift img-zoom">
+          <div class="flex items-center justify-between gap-3 mb-4">
+            <h3 class="text-lg font-bold flex items-center gap-2">
+              <span>⚡</span> D1scut
+            </h3>
+            <span class="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-2.5 py-1 text-xs text-white/60">Account</span>
           </div>
-          <div class="mt-4">
-            <img src="disc.png" alt="D1scut" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
-          </div>
+          <img src="disc.png" alt="D1scut" loading="lazy" data-lightbox tabindex="0" role="button" class="w-full h-56 md:h-64 object-cover rounded-2xl border border-white/10 bg-white/5 cursor-zoom-in" />
         </article>
       </div>
     </section>
 
     <!-- MISSION -->
-    <section id="mission" class="pt-12 md:pt-16">
-      <div class="reveal grid gap-4 md:grid-cols-12">
+    <section id="mission" class="pt-14 md:pt-20">
+      <div class="reveal grid gap-5 md:grid-cols-12">
         <div class="md:col-span-7">
-          <div class="rounded-3xl glass p-6 md:p-8">
-            <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">MISSION</h2>
-            <p class="mt-4 text-sm md:text-base text-white/70 leading-relaxed">
-              Мы остановились в одной победе от титула Чемпионов Мира. Наша цель — вернуться на решающую стадию и довести результат до победы. Мы работаем системно, строго оцениваем свою игру и строим подготовку вокруг конкретных задач. Для нас имеет значение только то, что подтверждено выступлениями.
+          <div class="rounded-3xl glass p-6 md:p-8 hover-lift">
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 mb-4">
+              <span>🎯</span> Миссия
+            </div>
+            <h2 class="text-3xl md:text-4xl font-black tracking-tight">MISSION</h2>
+            <p class="mt-5 text-sm md:text-base text-white/70 leading-relaxed">
+              Мы остановились в одной победе от титула Чемпионов Мира. Наша цель — вернуться на решающую стадию и довести результат до победы. Мы работаем системно, строго оцениваем свою игру и строим подготовку вокруг конкретных задач.
             </p>
-            <div class="mt-6 rounded-2xl border border-white/10 bg-white/5 p-4">
-              <div class="text-xs text-white/60">Финальная строка</div>
-              <div class="mt-2 text-sm md:text-base font-semibold grad-text">«Наша задача — завершать решающие стадии победой.»</div>
+            <div class="mt-6 rounded-2xl border border-white/10 bg-gradient-to-r from-cyan-500/10 to-violet-500/10 p-5">
+              <div class="text-xs text-white/60 flex items-center gap-2">
+                <span>💬</span> Финальная строка
+              </div>
+              <div class="mt-3 text-base md:text-lg font-bold grad-text-animated">«Наша задача — завершать решающие стадии победой.»</div>
             </div>
           </div>
         </div>
         <div class="md:col-span-5">
-          <div class="rounded-3xl glass p-6 md:p-8">
-            <h3 class="text-sm font-semibold tracking-wide text-white/80">Принципы</h3>
-            <ul class="mt-4 space-y-3">
-              <li class="flex items-start gap-3">
-                <span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/5">
-                  <span class="h-2 w-2 rounded-full" style="background: var(--accent2);"></span>
-                </span>
+          <div class="reveal reveal-delay-1 rounded-3xl glass p-6 md:p-8 hover-lift h-full">
+            <h3 class="text-sm font-bold tracking-wide text-white/80 flex items-center gap-2">
+              <span class="inline-block h-1.5 w-6 rounded-full" style="background: linear-gradient(90deg, var(--accent2), var(--accent));"></span>
+              Принципы
+            </h3>
+            <ul class="mt-5 space-y-4">
+              <li class="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                <span class="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-cyan-400/30 bg-cyan-400/10 text-lg">🎯</span>
                 <div>
-                  <div class="font-semibold">Дисциплина и регулярность</div>
-                  <div class="text-sm text-white/60">Режим, стабильность, повторяемость результата.</div>
+                  <div class="font-bold">Дисциплина и регулярность</div>
+                  <div class="text-sm text-white/60 mt-1">Режим, стабильность, повторяемость результата.</div>
                 </div>
               </li>
-              <li class="flex items-start gap-3">
-                <span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/5">
-                  <span class="h-2 w-2 rounded-full" style="background: var(--accent);"></span>
-                </span>
+              <li class="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                <span class="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-violet-400/30 bg-violet-400/10 text-lg">🤝</span>
                 <div>
-                  <div class="font-semibold">Командная ответственность</div>
-                  <div class="text-sm text-white/60">Решения, коммуникация, дисциплина в деталях.</div>
+                  <div class="font-bold">Командная ответственность</div>
+                  <div class="text-sm text-white/60 mt-1">Решения, коммуникация, дисциплина в деталях.</div>
                 </div>
               </li>
-              <li class="flex items-start gap-3">
-                <span class="mt-1 inline-flex h-6 w-6 items-center justify-center rounded-lg border border-white/10 bg-white/5">
-                  <span class="h-2 w-2 rounded-full" style="background: linear-gradient(90deg, var(--accent2), var(--accent));"></span>
-                </span>
+              <li class="flex items-start gap-4 p-3 rounded-xl hover:bg-white/5 transition-all">
+                <span class="mt-0.5 inline-flex h-8 w-8 items-center justify-center rounded-xl border border-emerald-400/30 bg-emerald-400/10 text-lg">🏆</span>
                 <div>
-                  <div class="font-semibold">Приоритет результата</div>
-                  <div class="text-sm text-white/60">Оценка только по выступлениям и прогрессу.</div>
+                  <div class="font-bold">Приоритет результата</div>
+                  <div class="text-sm text-white/60 mt-1">Оценка только по выступлениям и прогрессу.</div>
                 </div>
               </li>
             </ul>
 
-            <a href="#history" class="mt-6 inline-flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold hover:bg-white/10">
+            <a href="#history" class="mt-6 inline-flex w-full items-center justify-between rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-sm font-semibold hover:bg-white/10 hover:border-white/20 transition-all glow-btn">
               <span>Перейти к подробной истории</span>
-              <span class="grad-text">DETAILED HISTORY</span>
+              <span class="grad-text font-bold">→</span>
             </a>
           </div>
         </div>
@@ -467,136 +838,140 @@
     </section>
 
     <!-- DETAILED HISTORY -->
-    <section id="history" class="pt-12 md:pt-16">
+    <section id="history" class="pt-14 md:pt-20">
       <div class="reveal">
-        <h2 class="text-2xl md:text-3xl font-extrabold tracking-tight">DETAILED HISTORY</h2>
-        <p class="mt-2 text-white/70 max-w-3xl">Подробная история LUCA (аккордеон). Можно открыть все блоки для полного чтения.</p>
+        <div class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-white/60 mb-3">
+          <span>📚</span> Подробности
+        </div>
+        <h2 class="text-3xl md:text-4xl font-black tracking-tight">DETAILED HISTORY</h2>
+        <p class="mt-3 text-white/70 max-w-3xl">Подробная история LUCA. Можно открыть все блоки для полного чтения.</p>
       </div>
 
-      <div class="mt-6 grid gap-4">
-        <div class="reveal rounded-3xl glass p-4 md:p-5">
+      <div class="mt-8 grid gap-4">
+        <div class="reveal rounded-2xl glass p-4 md:p-5">
           <div class="flex flex-wrap items-center justify-between gap-3">
-            <div class="text-sm font-semibold text-white/80">Подробная история LUCA</div>
+            <div class="text-sm font-semibold text-white/80 flex items-center gap-2">
+              <span>📖</span> Подробная история LUCA
+            </div>
             <div class="flex gap-2">
-              <button id="expandAll" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 hover:bg-white/10">Открыть всё</button>
-              <button id="collapseAll" class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-xs font-semibold text-white/80 hover:bg-white/10">Свернуть</button>
+              <button id="expandAll" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:border-white/20 transition-all">Открыть всё</button>
+              <button id="collapseAll" class="rounded-xl border border-white/10 bg-white/5 px-4 py-2.5 text-xs font-semibold text-white/80 hover:bg-white/10 hover:border-white/20 transition-all">Свернуть</button>
             </div>
           </div>
         </div>
 
-        <div class="reveal rounded-3xl glass overflow-hidden">
-          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4" aria-expanded="false">
+        <div class="reveal rounded-3xl glass overflow-hidden hover:border-white/15 transition-all">
+          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4 hover:bg-white/5 transition-all" aria-expanded="false">
             <div>
-              <div class="text-xs text-white/60">I</div>
-              <div class="mt-1 font-bold">Основание и спортивная база (06.06.2023)</div>
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-cyan-400/30 bg-cyan-400/10 text-xs font-bold text-cyan-400">I</div>
+              <div class="mt-2 font-bold text-lg">Основание и спортивная база (06.06.2023)</div>
             </div>
-            <span class="acc-icon mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <span class="acc-icon mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all">
+              <svg class="h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
           <div class="acc-panel hidden px-6 pb-6">
             <p class="text-sm text-white/70 leading-relaxed">
-              Команда была создана <span class="font-semibold text-white/85">sibpollerty</span> и <span class="font-semibold text-white/85">Fals1on</span> под названием <span class="font-semibold text-white/85">Blesseds</span>. На раннем этапе основой стал бадминтон — спорт, который формирует выдержку, дисциплину и устойчивость к давлению. Этот опыт стал базой подхода к тренировкам и командной работе.
+              Команда была создана <span class="font-semibold text-white/90">sibpollerty</span> и <span class="font-semibold text-white/90">Fals1on</span> под названием <span class="font-semibold text-white/90">Blesseds</span>. На раннем этапе основой стал бадминтон — спорт, который формирует выдержку, дисциплину и устойчивость к давлению. Этот опыт стал базой подхода к тренировкам и командной работе.
             </p>
           </div>
         </div>
 
-        <div class="reveal rounded-3xl glass overflow-hidden">
-          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4" aria-expanded="false">
+        <div class="reveal rounded-3xl glass overflow-hidden hover:border-white/15 transition-all">
+          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4 hover:bg-white/5 transition-all" aria-expanded="false">
             <div>
-              <div class="text-xs text-white/60">II</div>
-              <div class="mt-1 font-bold">Standoff 2: этап развития и необходимость изменений</div>
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-violet-400/30 bg-violet-400/10 text-xs font-bold text-violet-400">II</div>
+              <div class="mt-2 font-bold text-lg">Standoff 2: этап развития</div>
             </div>
-            <span class="acc-icon mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <span class="acc-icon mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all">
+              <svg class="h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
           <div class="acc-panel hidden px-6 pb-6">
             <p class="text-sm text-white/70 leading-relaxed">
-              В Standoff 2 команда усилилась игроком <span class="font-semibold text-white/85">D1scut</span>, однако существенного результата добиться не удалось. В ноябре было принято решение распустить состав. Это стало необходимым шагом для пересборки процессов и возвращения в более подходящей дисциплине.
+              В Standoff 2 команда усилилась игроком <span class="font-semibold text-white/90">D1scut</span>, однако существенного результата добиться не удалось. В ноябре было принято решение распустить состав. Это стало необходимым шагом для пересборки процессов.
             </p>
           </div>
         </div>
 
-        <div class="reveal rounded-3xl glass overflow-hidden">
-          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4" aria-expanded="false">
+        <div class="reveal rounded-3xl glass overflow-hidden hover:border-white/15 transition-all">
+          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4 hover:bg-white/5 transition-all" aria-expanded="false">
             <div>
-              <div class="text-xs text-white/60">III</div>
-              <div class="mt-1 font-bold">Возвращение 04.12.2023 и переход в Brawl Stars</div>
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-emerald-400/30 bg-emerald-400/10 text-xs font-bold text-emerald-400">III</div>
+              <div class="mt-2 font-bold text-lg">Возвращение 04.12.2023 и переход в Brawl Stars</div>
             </div>
-            <span class="acc-icon mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <span class="acc-icon mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all">
+              <svg class="h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
           <div class="acc-panel hidden px-6 pb-6">
             <p class="text-sm text-white/70 leading-relaxed">
-              4 декабря команда возобновила деятельность в <span class="font-semibold text-white/85">Brawl Stars</span>. В период активных выступлений были подписаны <span class="font-semibold text-white/85">Mr.Kraken</span>, <span class="font-semibold text-white/85">nikells</span>, <span class="font-semibold text-white/85">express</span>. Одним из заметных матчей стала игра против <span class="font-semibold text-white/85">Dexoxyribonucleic acid</span> (состав: Express / Fals1on / Mr.Kraken).
+              4 декабря команда возобновила деятельность в <span class="font-semibold text-white/90">Brawl Stars</span>. Были подписаны <span class="font-semibold text-white/90">Mr.Kraken</span>, <span class="font-semibold text-white/90">nikells</span>, <span class="font-semibold text-white/90">express</span>. Одним из заметных матчей стала игра против <span class="font-semibold text-white/90">Dexoxyribonucleic acid</span>.
             </p>
           </div>
         </div>
 
-        <div class="reveal rounded-3xl glass overflow-hidden">
-          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4" aria-expanded="false">
+        <div class="reveal rounded-3xl glass overflow-hidden hover:border-white/15 transition-all">
+          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4 hover:bg-white/5 transition-all" aria-expanded="false">
             <div>
-              <div class="text-xs text-white/60">IV</div>
-              <div class="mt-1 font-bold">Изменения состава</div>
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-orange-400/30 bg-orange-400/10 text-xs font-bold text-orange-400">IV</div>
+              <div class="mt-2 font-bold text-lg">Изменения состава</div>
             </div>
-            <span class="acc-icon mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <span class="acc-icon mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all">
+              <svg class="h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
           <div class="acc-panel hidden px-6 pb-6">
-            <ul class="space-y-2 text-sm text-white/70">
-              <li>— <span class="font-semibold text-white/85">Mr.Kraken</span> покинул команду по личному желанию (контракт расторгнут).</li>
-              <li>— С <span class="font-semibold text-white/85">express</span> контракт расторгнут по инициативе клуба из за неудовлетворительных результатов.</li>
-              <li>— С <span class="font-semibold text-white/85">nikells</span> контракт расторгнут из за разногласий внутри коллектива.</li>
-              <li class="pt-2 text-white/60">После этого команда продолжила путь стабильным ядром из трёх игроков.</li>
+            <ul class="space-y-3 text-sm text-white/70">
+              <li class="flex items-start gap-3"><span class="text-red-400">×</span> <span><span class="font-semibold text-white/90">Mr.Kraken</span> покинул команду по личному желанию.</span></li>
+              <li class="flex items-start gap-3"><span class="text-red-400">×</span> <span>С <span class="font-semibold text-white/90">express</span> контракт расторгнут из за результатов.</span></li>
+              <li class="flex items-start gap-3"><span class="text-red-400">×</span> <span>С <span class="font-semibold text-white/90">nikells</span> контракт расторгнут из за разногласий.</span></li>
             </ul>
           </div>
         </div>
 
-        <div class="reveal rounded-3xl glass overflow-hidden">
-          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4" aria-expanded="false">
+        <div class="reveal rounded-3xl glass overflow-hidden hover:border-white/15 transition-all">
+          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4 hover:bg-white/5 transition-all" aria-expanded="false">
             <div>
-              <div class="text-xs text-white/60">V</div>
-              <div class="mt-1 font-bold">Результат, близкий к титулу</div>
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-yellow-400/30 bg-yellow-400/10 text-xs font-bold text-yellow-400">V</div>
+              <div class="mt-2 font-bold text-lg">Результат, близкий к титулу 🏆</div>
             </div>
-            <span class="acc-icon mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <span class="acc-icon mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all">
+              <svg class="h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
           <div class="acc-panel hidden px-6 pb-6">
             <p class="text-sm text-white/70 leading-relaxed">
-              Состав <span class="font-semibold text-white/85">sibpollerty / Fals1on / D1scut</span> был в шаге от победы на Чемпионате Мира. Не хватило одной победы. Команда взяла короткую паузу и вернулась к регулярным выступлениям, сохранив фокус на прогрессе и качестве игры.
+              Состав <span class="font-semibold text-white/90">sibpollerty / Fals1on / D1scut</span> был в шаге от победы на Чемпионате Мира. Не хватило одной победы. Команда взяла короткую паузу и вернулась к регулярным выступлениям.
             </p>
           </div>
         </div>
 
-        <div class="reveal rounded-3xl glass overflow-hidden">
-          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4" aria-expanded="false">
+        <div class="reveal rounded-3xl glass overflow-hidden hover:border-white/15 transition-all">
+          <button class="acc-btn w-full text-left px-6 py-5 flex items-start justify-between gap-4 hover:bg-white/5 transition-all" aria-expanded="false">
             <div>
-              <div class="text-xs text-white/60">VI</div>
-              <div class="mt-1 font-bold">Ребрендинг 02.03.2025 и текущий этап</div>
+              <div class="inline-flex items-center justify-center h-6 w-6 rounded-full border border-pink-400/30 bg-pink-400/10 text-xs font-bold text-pink-400">VI</div>
+              <div class="mt-2 font-bold text-lg">Ребрендинг 02.03.2025 ✨</div>
             </div>
-            <span class="acc-icon mt-1 inline-flex h-9 w-9 items-center justify-center rounded-xl border border-white/10 bg-white/5">
-              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            <span class="acc-icon mt-1 inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/5 transition-all">
+              <svg class="h-4 w-4 transition-transform duration-300" viewBox="0 0 24 24" fill="none">
+                <path d="M6 9l6 6 6-6" stroke="rgba(255,255,255,.85)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </span>
           </button>
           <div class="acc-panel hidden px-6 pb-6">
             <p class="text-sm text-white/70 leading-relaxed">
-              2 марта 2025 команда объявила о ребрендинге и сменила название на <span class="font-semibold text-white/85">Lunatics Cats (LUCA)</span>. Сейчас состав стабилен: <span class="font-semibold text-white/85">sibpollerty, Fals1on, D1scut</span>. Команда продолжает выступления и планомерно повышает уровень результатов.
+              2 марта 2025 команда объявила о ребрендинге и сменила название на <span class="font-bold grad-text">Lunatics Cats (LUCA)</span>. Сейчас состав стабилен: <span class="font-semibold text-white/90">sibpollerty, Fals1on, D1scut</span>. Команда продолжает выступления и планомерно повышает уровень результатов.
             </p>
           </div>
         </div>
@@ -604,48 +979,53 @@
     </section>
 
     <!-- Footer -->
-    <footer class="pt-14">
+    <footer class="pt-16">
       <div class="reveal rounded-3xl glass p-6 md:p-8">
-        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
-            <div class="text-sm font-semibold">Lunatics Cats (LUCA)</div>
-            <div class="mt-1 text-xs text-white/60">«Рожденные падать, чтобы взлететь выше.»</div>
+            <div class="flex items-center gap-3">
+              <span class="text-2xl">🐱</span>
+              <div class="text-lg font-bold grad-text">Lunatics Cats (LUCA)</div>
+            </div>
+            <div class="mt-2 text-sm text-white/60 italic">«Рожденные падать, чтобы взлететь выше.»</div>
           </div>
           <div class="flex flex-col sm:flex-row gap-3">
-            <a href="#home" class="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold hover:bg-white/10">Наверх</a>
-            <a href="https://t.me/bldsib" target="_blank" rel="noopener" aria-label="Telegram" class="inline-flex items-center justify-center rounded-2xl bg-white px-4 py-3 text-sm font-semibold text-black hover:bg-white/90">
-              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M21.6 5.2c.2-.8-.5-1.4-1.2-1.1L3.2 10.7c-.8.3-.8 1.4.1 1.6l4.6 1.4 1.7 5.4c.2.8 1.2.9 1.6.3l2.6-3.4 4.9 3.6c.6.4 1.5.1 1.7-.7l3-13.7Z" fill="#111827" fill-opacity="1"/>
-                <path d="M8.1 13.7 18.9 6.7c.3-.2.7.2.4.5l-8.6 8" stroke="#ffffff" stroke-opacity="0.0"/>
+            <a href="#home" class="inline-flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 text-sm font-semibold hover:bg-white/10 hover:border-white/20 transition-all">
+              ↑ Наверх
+            </a>
+            <a href="https://t.me/bldsib" target="_blank" rel="noopener" class="glow-btn inline-flex items-center justify-center gap-2 rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black hover:bg-white/95">
+              <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
               </svg>
+              Telegram
             </a>
           </div>
         </div>
-        <div class="mt-6 border-t border-white/10 pt-4 text-xs text-white/50 flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+        <div class="mt-8 pt-6 border-t border-white/10 text-xs text-white/50 flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           <div>© <span id="year"></span> LUCA. Single-page profile.</div>
+          <div class="flex items-center gap-2">
+            <span class="inline-block h-2 w-2 rounded-full bg-emerald-400 pulse-dot"></span>
+            <span>Активны и готовы к соревнованиям</span>
+          </div>
         </div>
       </div>
     </footer>
   </main>
 
-  <!-- Lightbox modal (single instance, reused) -->
+  <!-- Lightbox modal -->
   <div id="lightbox" class="fixed inset-0 z-[999] hidden" aria-hidden="true">
-    <div id="lightboxBackdrop" class="absolute inset-0 bg-black/75"></div>
-
-    <!-- FIXED back arrow to make exit obvious -->
-    <button id="lightboxBack" type="button" class="fixed top-4 left-4 z-[1001] inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white px-4 h-11 shadow-xl" aria-label="Назад (закрыть)">
+    <div id="lightboxBackdrop" class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <button id="lightboxBack" type="button" class="fixed top-4 left-4 z-[1001] inline-flex items-center gap-2 rounded-2xl border border-white/10 bg-white/10 hover:bg-white/20 text-white px-4 h-12 shadow-xl transition-all">
       <span class="text-xl leading-none">←</span>
       <span class="text-sm font-semibold hidden sm:inline">Назад</span>
     </button>
-
-    <button id="lightboxClose" type="button" class="fixed top-4 right-4 z-[1001] inline-flex h-11 w-11 items-center justify-center rounded-2xl border border-white/10 bg-white/10 hover:bg-white/15 text-white text-xl leading-none shadow-xl" aria-label="Закрыть">
+    <button id="lightboxClose" type="button" class="fixed top-4 right-4 z-[1001] inline-flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/10 hover:bg-white/20 text-white text-xl leading-none shadow-xl transition-all" aria-label="Закрыть">
       ✕
     </button>
-
     <div class="relative h-full w-full flex items-center justify-center p-4">
       <div id="lightboxContent" class="relative w-full max-w-5xl">
         <div class="rounded-3xl border border-white/10 bg-black/40 backdrop-blur-md p-3 md:p-4 shadow-2xl">
-          <img id="lightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl cursor-pointer" title="Нажмите на фото, чтобы выйти" />
+          <img id="lightboxImg" src="" alt="" class="w-full max-h-[80vh] object-contain rounded-2xl cursor-pointer" title="Нажмите для закрытия" />
         </div>
       </div>
     </div>
@@ -656,17 +1036,73 @@
     const $ = (sel, root = document) => root.querySelector(sel);
     const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
 
+    // Loading screen
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        $('#loadingScreen').classList.add('hidden');
+      }, 800);
+    });
+
+    // Create floating particles
+    function createParticles() {
+      const container = $('#particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 15 + 's';
+        particle.style.animationDuration = (15 + Math.random() * 10) + 's';
+        particle.style.width = (2 + Math.random() * 4) + 'px';
+        particle.style.height = particle.style.width;
+        container.appendChild(particle);
+      }
+    }
+    createParticles();
+
+    // Scroll progress bar
+    const scrollProgress = $('#scrollProgress');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = scrollTop / docHeight;
+      scrollProgress.style.transform = `scaleX(${progress})`;
+    });
+
     // Year
     $('#year').textContent = new Date().getFullYear();
+
+    // Animated counters
+    function animateCounters() {
+      const counters = $$('.counter');
+      counters.forEach(counter => {
+        const target = parseInt(counter.dataset.target);
+        const duration = 2000;
+        const step = target / (duration / 16);
+        let current = 0;
+        
+        const updateCounter = () => {
+          current += step;
+          if (current < target) {
+            counter.textContent = Math.floor(current);
+            requestAnimationFrame(updateCounter);
+          } else {
+            counter.textContent = target;
+          }
+        };
+        updateCounter();
+      });
+    }
 
     // Mobile menu
     const menuBtn = $('#menuBtn');
     const mobileMenu = $('#mobileMenu');
+    const menuIcon = $('#menuIcon');
 
     function setMenu(open) {
       mobileMenu.classList.toggle('hidden', !open);
       menuBtn.setAttribute('aria-expanded', String(open));
       document.body.classList.toggle('menu-open', open);
+      menuIcon.style.transform = open ? 'rotate(90deg)' : 'rotate(0deg)';
     }
 
     menuBtn?.addEventListener('click', () => {
@@ -718,8 +1154,6 @@
       if (location.hash) scrollToHash(location.hash, { focus: false });
     });
     window.addEventListener('hashchange', () => scrollToHash(location.hash, { focus: false }));
-
-    // Close on Escape (menu)
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') setMenu(false);
     });
@@ -735,20 +1169,12 @@
       panel.classList.toggle('hidden', !nextOpen);
       btn.setAttribute('aria-expanded', String(nextOpen));
 
-      const icon = $('.acc-icon', root);
-      icon?.classList.toggle('bg-white/10', nextOpen);
-      icon?.classList.toggle('bg-white/5', !nextOpen);
-      icon?.classList.toggle('border-white/20', nextOpen);
+      const icon = $('.acc-icon svg', root);
+      icon?.style && (icon.style.transform = nextOpen ? 'rotate(180deg)' : 'rotate(0deg)');
     }
 
     accButtons.forEach(btn => {
       btn.addEventListener('click', () => toggleAccordion(btn));
-      btn.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleAccordion(btn);
-        }
-      });
     });
 
     $('#expandAll')?.addEventListener('click', () => accButtons.forEach(b => toggleAccordion(b, true)));
@@ -756,14 +1182,22 @@
 
     // Reveal on scroll
     const revealEls = $$('.reveal');
+    let countersAnimated = false;
+
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (e.isIntersecting) {
           e.target.classList.add('is-in');
           io.unobserve(e.target);
+          
+          // Trigger counter animation when stats section is visible
+          if (!countersAnimated && e.target.closest('#home')) {
+            countersAnimated = true;
+            setTimeout(animateCounters, 500);
+          }
         }
       }
-    }, { threshold: 0.12 });
+    }, { threshold: 0.1 });
 
     revealEls.forEach(el => io.observe(el));
 
@@ -785,13 +1219,12 @@
         a.classList.toggle('text-white', active);
         a.classList.toggle('text-white/70', !active);
         a.classList.toggle('bg-white/10', active);
-        a.classList.toggle('bg-white/0', !active);
       });
     }, { rootMargin: '-40% 0px -55% 0px', threshold: [0.05, 0.15, 0.25] });
 
     sections.forEach(s => spy.observe(s));
 
-    // ===== Lightbox (ACCOUNTS images) =====
+    // Lightbox
     (function initLightbox() {
       const lightbox = $('#lightbox');
       const backdrop = $('#lightboxBackdrop');
@@ -818,8 +1251,6 @@
         lightbox.classList.remove('hidden');
         lightbox.setAttribute('aria-hidden', 'false');
         document.body.classList.add('modal-open');
-
-        // focus back button so it's immediately discoverable
         backBtn.focus({ preventScroll: true });
       }
 
@@ -828,7 +1259,6 @@
         lightbox.classList.add('hidden');
         lightbox.setAttribute('aria-hidden', 'true');
         document.body.classList.remove('modal-open');
-
         imgEl.removeAttribute('src');
         imgEl.alt = '';
 
@@ -838,7 +1268,6 @@
         lastFocus = null;
       }
 
-      // Click preview (event delegation)
       document.addEventListener('click', (e) => {
         const t = e.target.closest('[data-lightbox]');
         if (!t) return;
@@ -846,7 +1275,6 @@
         openFromImage(t);
       });
 
-      // Keyboard open on preview
       document.addEventListener('keydown', (e) => {
         const t = e.target.closest?.('[data-lightbox]');
         if (!t || t.tagName !== 'IMG') {
@@ -864,19 +1292,31 @@
         }
       });
 
-      // Close: click backdrop
       backdrop.addEventListener('click', close);
-
-      // Prevent backdrop close when clicking inside content
       content?.addEventListener('click', (e) => e.stopPropagation());
-
-      // Close: buttons
       closeBtn.addEventListener('click', close);
       backBtn.addEventListener('click', close);
-
-      // Extra: close by clicking on the full image itself
       imgEl.addEventListener('click', close);
     })();
+
+    // 3D tilt effect on cards
+    $$('.card-3d').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const rotateX = (y - centerY) / 20;
+        const rotateY = (centerX - x) / 20;
+        
+        card.style.transform = `translateY(-8px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'translateY(0) rotateX(0) rotateY(0)';
+      });
+    });
   </script>
 </body>
 </html>
